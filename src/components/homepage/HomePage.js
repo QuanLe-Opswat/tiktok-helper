@@ -1,32 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import LinkInputComponent from '../../ui/link-input/LinkInputComponent';
-import TokenInputComponent from '../../ui/token-input/TokenInputComponent';
+
 import tiktokGetLink from '../../service/TiktokGetLink';
 
 import './HomePage.scss';
+import LoadingComponent from '../../ui/loading/LoadingComponent';
+import ConfigGuide from '../../ui/config-guide/ConfigGuide';
+import VideoComponent from '../../ui/video/VideoComponent';
 
 const HomePage = () => {
 
-  const [token, setToken] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [showGuide, setShowGuide] = useState(false);
+  const [videos, setVideos] = useState([]);
 
-  const mainButtonClick = (link) => {
-    (() => {
-      console.log(link);
-      console.log(token);
-
-      let promise = tiktokGetLink.get(link, token);
-      console.log(promise);
+  useEffect(() => {
+    (async () => {
+      const isOk = await tiktokGetLink.checkCors();
+      setLoading(false);
+      if (!isOk) {
+        setShowGuide(true);
+      }
     })();
+  }, []);
+
+  const getResponse = (response) => {
+    console.log(response);
+    setVideos(response);
   };
 
+  const loadingDOM = useMemo(() => (<>{loading && <LoadingComponent/>}</>),
+    [loading]);
+
+  const mainDOM = useMemo(() => (
+    <>
+      {!loading && !showGuide &&
+      <Card>
+        <Card.Body>
+          <LinkInputComponent getResponse={getResponse}/>
+        </Card.Body>
+      </Card>}
+    </>
+  ), [loading, showGuide]);
+
+  const guideDOM = useMemo(() => (
+    <>
+      {!loading && showGuide && <ConfigGuide/>}
+    </>
+  ), [loading, showGuide]);
+
+  const videosDOM = useMemo(() =>
+      videos.map((v, index) => <VideoComponent index={index} data={v}/>)
+    , [videos]);
+
   return <div className='HomePage'>
-    <Card>
-      <Card.Body>
-        <LinkInputComponent onClick={mainButtonClick}/>
-        <TokenInputComponent tokenChange={(token) => setToken(token)}/>
-      </Card.Body>
-    </Card>
+    {loadingDOM}
+    {mainDOM}
+    {guideDOM}
+    {videosDOM}
   </div>;
 };
 
