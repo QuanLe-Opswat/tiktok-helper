@@ -6,8 +6,10 @@ app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true,
 }));
-// app.set('Access-Control-Allow-Origin', '*');
+
 app.use(cors());
+
+require('tls').DEFAULT_ECDH_CURVE = 'auto';
 
 const axios = require('axios');
 
@@ -18,7 +20,7 @@ const Constant = {
   ERROR_UrlInvalid: 'Your Tiktok link is invalid, try again...',
   ERROR_CookieFail: 'Get Cookies section fail, try again...',
 
-  ERROR_Network: 'Network error!!!',
+  ERROR_InternalServerError: 'Internal server error, please contact admin...',
 };
 
 app.get('/', (req, res) => {
@@ -34,35 +36,35 @@ app.listen(port, () => {
 app.get('/download', async (req, res) => {
   let url = req.query.url;
   // url = 'https://www.tiktok.com/@elkayvietnam/video/6796474154729082114';
-  res.send(await getTiktokDownloadLink(url));
+  // url = 'https://www.iesdouyin.com/share/video/6796530901963590927/?region=CN&mid=6786563413751122702&u_code=0&titleType=title';
+  let result = { error_msg_server: Constant.ERROR_UrlInvalid };
+  const splits = url ? url.split('/') : undefined;
+  if (splits && splits.length > 3) {
+    const domain = splits[2];
+    if (domain.includes('tiktok')) {
+      result = await getTiktokDownloadLink(url);
+    } else if (domain.includes('douyin')) {
+      result = await getTiktokCnDownloadLink(url);
+    }
+  }
+
+  return res.send(result);
 });
 
 const getTiktokDownloadLink = async (url) => {
   try {
     // Find token
     let response = await axios.get('https://musicallydown.com/');
-    let match = response.data.match(/name="vtoken"\s*value="(\w+)"/);
-    if (!match || match.length < 2) {
-      return { error: Constant.ERROR_TokenNotFount };
-    }
-    const vtoken = match[1];
-
-    // Get cookie => can ignore if in client side
-    let cookie;
-    try {
-      cookie = response.headers['set-cookie'][0].split(';')[0];
-    } catch (e) {
-      // ignore
-    }
-    if (!cookie) {
-      return { error_msg_server: Constant.ERROR_CookieFail, header: response.headers };
+    const { error_msg_server, token, cookie } = getTokenCookies(response, response.data.match(/name="vtoken"\s*value="(\w+)"/));
+    if (error_msg_server) {
+      return { error_msg_server };
     }
 
     // Request video id
-    response = await axios.post('https://musicallydown.com/download', `url=${encodeURIComponent(url)}&vtoken=${vtoken}`, {
+    response = await axios.post('https://musicallydown.com/download', `url=${encodeURIComponent(url)}&vtoken=${token}`, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Cookie': cookie },
     });
-    match = response.data.match(/name="q"\s*value="(\w+)"/);
+    let match = response.data.match(/name="q"\s*value="(\w+)"/);
     if (!match || match.length < 2) {
       match = response.data.match(/Materialize.toast\('Url Field is Empty, Try Again!', 5000\)/);
       if (match && match.length > 0) {
@@ -93,6 +95,53 @@ const getTiktokDownloadLink = async (url) => {
     }
   } catch (e) {
     console.log(e);
-    return { error_msg_server: Constant.ERROR_Network };
+    return { error_msg_server: Constant.ERROR_InternalServerError };
   }
+};
+
+const getTiktokCnDownloadLink = async (url) => {
+
+  try {
+    // Find token
+    let response = await axios.get('http://pcsdownload.com/en/download-tiktok-china-video');
+
+    const { error_msg_server, token, cookie } = getTokenCookies(response, response.data.match(/name="token"\s*value="(\w+)"/));
+    if (error_msg_server) {
+      return { error_msg_server };
+    }
+
+    // Request video id
+    response = await axios.post('https://pcsdownload.com/handle.php', `url=${encodeURIComponent(url)}&token=${token}`, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Cookie': cookie },
+    });
+
+    if (response && response.data) {
+      let json = JSON.parse(`{${response.data.split('{')[1]}`);
+      return { data: { url: `https://pcsdownload.com/videos/${json.videoURL}`, image: json.imageURL } };
+    } else {
+      return { error_msg_server: Constant.ERROR_UrlInvalid };
+    }
+  } catch (e) {
+    console.log(e);
+    return { error_msg_server: Constant.ERROR_InternalServerError };
+  }
+};
+
+const getTokenCookies = (response, match) => {
+  if (!match || match.length < 2) {
+    return { error_msg_server: Constant.ERROR_TokenNotFount };
+  }
+  const token = match[1];
+  // Get cookie => can ignore if in client side
+  let cookie;
+  try {
+    cookie = response.headers['set-cookie'][0].split(';')[0];
+  } catch (e) {
+    // ignore
+  }
+  if (!cookie) {
+    return { error_msg_server: Constant.ERROR_CookieFail, header: response.headers };
+  }
+
+  return { token, cookie };
 };

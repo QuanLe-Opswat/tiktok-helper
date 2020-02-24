@@ -9,7 +9,7 @@ class TiktokGetLink {
     // https://alfilatov.com/posts/run-chrome-without-cors/
     try {
       // Get link download
-      let response = await axios.get(`${HOST}?url=${url}`);
+      let response = await axios.get(`${HOST}?url=${encodeURIComponent(url)}`);
       if (response && response.data) {
         if (response.data.error) {
           return { error: `${Constant.ERROR_ServerSide}: ${response.error}` };
