@@ -3,9 +3,9 @@ import { InputGroup, FormControl, Button, Alert, Spinner } from 'react-bootstrap
 import tiktokGetLink from '../../service/TiktokGetLink';
 import { throttle } from 'lodash';
 
-import './LinkInputComponent.scss';
+import './LinkInput.scss';
 
-const LinkInputComponent = ({ getResponse }) => {
+const LinkInput = ({ getResponse }) => {
 
   const [link, setLink] = useState('');
   const [error, setError] = useState('');
@@ -30,7 +30,7 @@ const LinkInputComponent = ({ getResponse }) => {
 
   const errorDOM = useMemo(() => (<>{error && <Alert variant='danger'>{error}</Alert>}</>), [error]);
 
-  return <div className='linkInputComponent'>
+  return <div className='LinkInput'>
     <label htmlFor="basic-url">Tiktok link</label>
     <InputGroup className="mb-3">
       <FormControl
@@ -54,5 +54,5 @@ const LinkInputComponent = ({ getResponse }) => {
   </div>;
 };
 
-export default LinkInputComponent;
+export default LinkInput;
 

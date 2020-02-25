@@ -4,4 +4,20 @@
  * See: https://www.gatsbyjs.org/docs/node-apis/
  */
 
-// You can delete this file if you're not using it
+// const path = require(`path`);
+
+exports.createPages = ({ actions }) => {
+  const { createPage } = actions;
+
+  createPage({
+    path: `/`,
+    component: require.resolve('./src/pages/index.js'),
+    context: { page: 'video' },
+  });
+
+  createPage({
+    path: `/trend`,
+    component: require.resolve('./src/pages/index.js'),
+    context: { page: 'trend' },
+  });
+};

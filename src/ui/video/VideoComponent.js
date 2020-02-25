@@ -5,13 +5,16 @@ import './VideoComponent.scss';
 
 const VideoComponent = ({ data }) => {
 
-  return (<a className='videoComponent' href={data.url} download='video_22.mp4' target='_blank' rel="noopener noreferrer">
+  return (<div className='videoComponent'>
     <Card>
       <Card.Img src={data.image}/>
-      <Card.ImgOverlay>
+      <Card.ImgOverlay href={data.url} download='video.mp4' target='_blank' rel="noopener noreferrer" as='a'>
       </Card.ImgOverlay>
+      {/*<Card.Body>*/}
+      {/*  title*/}
+      {/*</Card.Body>*/}
     </Card>
-  </a>);
+  </div>);
 };
 
 export default VideoComponent;
