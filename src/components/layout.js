@@ -38,8 +38,14 @@ const Layout = ({ children, page }) => {
               </Link>
 
               <Link to='/trend'>
-                <Button variant="outline-primary" size="sm">
+                <Button variant={page === 'trend' ? 'primary' : 'outline-primary'} size="sm">
                   Trend
+                </Button>
+              </Link>
+
+              <Link to='/extension'>
+                <Button variant={page === 'extension' ? 'primary' : 'outline-primary'} size="sm">
+                  Extension
                 </Button>
               </Link>
             </div>

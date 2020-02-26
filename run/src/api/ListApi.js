@@ -41,9 +41,9 @@ const delay = (interval) => {
 const getTrendTiktok = async () => {
   try {
     return await _getTrendTiktok();
-  } catch (e) {
-    console.log(e);
-    return { error_msg_server: Constant.ERROR_InternalServerError };
+  } catch (err) {
+    // console.log(err);
+    return { error_msg_server: Constant.ERROR_InternalServerError, err: { message: err.message, stack: err.stack } };
   }
 };
 

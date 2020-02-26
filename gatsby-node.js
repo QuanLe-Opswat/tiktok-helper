@@ -20,4 +20,10 @@ exports.createPages = ({ actions }) => {
     component: require.resolve('./src/pages/index.js'),
     context: { page: 'trend' },
   });
+
+  createPage({
+    path: `/extension`,
+    component: require.resolve('./src/pages/extension/extension.js'),
+    context: { page: 'extension' },
+  });
 };

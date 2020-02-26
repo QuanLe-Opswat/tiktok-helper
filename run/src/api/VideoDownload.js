@@ -44,8 +44,8 @@ const getTiktokDownloadLink = async (url) => {
       return { error_msg_server: Constant.ERROR_DownloadUrlNotFount };
     }
   } catch (e) {
-    console.log(e);
-    return { error_msg_server: Constant.ERROR_InternalServerError };
+    // console.log(e);
+    return { error_msg_server: Constant.ERROR_InternalServerError, err: e };
   }
 };
 
@@ -72,8 +72,8 @@ const getTiktokCnDownloadLink = async (url) => {
       return { error_msg_server: Constant.ERROR_UrlInvalid };
     }
   } catch (e) {
-    console.log(e);
-    return { error_msg_server: Constant.ERROR_InternalServerError };
+    // console.log(e);
+    return { error_msg_server: Constant.ERROR_InternalServerError, err: e };
   }
 };
 

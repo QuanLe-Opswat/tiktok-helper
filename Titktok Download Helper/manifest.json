@@ -1,0 +1,30 @@
+{
+  "name": "Titktok Download Helper",
+  "version": "0.1.2",
+  "description": "Titktok Download Helper",
+  "permissions": [
+    "activeTab"
+  ],
+  "icons": {
+    "16": "images/Tiktok-download-16.png",
+    "32": "images/Tiktok-download-32.png",
+    "48": "images/Tiktok-download-48.png",
+    "128": "images/Tiktok-download-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.tiktok.com/*",
+        "https://*.douyin.com/*"
+      ],
+      "run_at": "document_idle",
+      "js": [
+        "contentScript.js"
+      ],
+      "css": [
+        "contentStyle.css"
+      ]
+    }
+  ],
+  "manifest_version": 2
+}

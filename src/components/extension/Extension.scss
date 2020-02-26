@@ -1,0 +1,37 @@
+.extensionComponent {
+
+  h3 {
+    font-weight: normal;
+    margin-bottom: 20px;
+
+    .versionValue {
+      font-weight: bolder;
+      color: #007bff;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    margin: 0;
+  }
+
+  h6{
+    margin-bottom: 18px;
+  }
+
+  p{
+    margin-left: 18px;
+    line-height: 10px;
+  }
+
+  .imageInstall{
+    width: 1000px;
+  }
+
+  .spare{
+    padding: 0 4px;
+    border-radius: 5px;
+    border: #ffb2e1 solid thin;
+    background: rgba(255, 178, 225, 0.27);
+  }
+}

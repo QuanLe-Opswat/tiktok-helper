@@ -17,7 +17,6 @@ const HomePage = ({ page }) => {
   }, []);
 
   const getResponse = (response) => {
-    console.log(response);
     setVideos(response);
   };
 
@@ -25,7 +24,6 @@ const HomePage = ({ page }) => {
     [loading]);
 
   const inputDOM = useMemo(() => {
-    console.log(page);
     switch (page) {
       case 'trend':
         return <TrendInput getResponse={getResponse}/>;
