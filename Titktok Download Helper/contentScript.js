@@ -5,7 +5,7 @@
 
 const DONE_CLASS_NAME = '_quanle_done';
 const FETCHING_CLASS_NAME = '_quanle_fetch';
-const VERSION = 1002;
+const VERSION = 2000;
 
 const host = 'https://tiktok-7f5yfldkeq-de.a.run.app/download';
 const web = 'https://tiktok-helper-3561366311.gtsb.io';
@@ -42,10 +42,6 @@ const handleRest = async (url) => {
 
 const getVideo = (url) => {
   return handleRest(`${host}?url=${encodeURIComponent(url)}`);
-};
-
-const handleNodeCreate = () => {
-
 };
 
 // Small video tiktok
@@ -138,6 +134,11 @@ const getVideoDOM = (needUpdate) => {
   // Big video tiktok
   videoDOMs = findVideos('video-card-container');
   videoDOMs.forEach(v => fetchVideoBigTiktok(v, needUpdate));
+
+  // Big video tiktok CN
+  videoDOMs = findVideos('video-box fl');
+  videoDOMs.forEach(v => fetchVideoBigTiktok(v, needUpdate));
+  // console.log(videoDOMs);
 };
 
 const checkVersion = () => {

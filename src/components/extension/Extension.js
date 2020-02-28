@@ -5,11 +5,20 @@ import './Extension.scss';
 
 const Extension = () => {
 
-  const { version_string } = versionInfo;
+  const { version } = versionInfo;
+
+  const versionString = (() => {
+    const major = Math.floor(version / 1000000);
+    const minor = Math.floor((version - major * 1000000) / 1000);
+    const path = version - major * 1000000 - minor * 1000;
+
+    return [`${major}.${minor}.${path}`, `/tiktok_${major}_${minor}_${path}.zip`];
+  })();
+
 
   return (<div className='extensionComponent'>
-    <h3>Hướng dẫn cài đặt và Update Tiktok Extension - version: <span className='versionValue'>{version_string}</span></h3>
-    <h6>1. <a href='/tiktok_0_1_2.zip'>Tải file zip (Extension)</a> về và giải nén</h6>
+    <h3>Hướng dẫn cài đặt và Update Tiktok Extension - version: <span className='versionValue'>{versionString[0]}</span></h3>
+    <h6>1. <a href={versionString[1]}>Tải file zip (Extension)</a> về và giải nén</h6>
     <h6>2. Truy cập <a href='chrome://extensions/' target='_blank' rel="noopener noreferrer">chrome://extensions/</a></h6>
     <h6>3. Xoá Extension tên <span className='spare'>Titktok Download Helper</span> cũ nếu có</h6>
     <h6>4. Cài đặt Extension <span className='spare'>Titktok Download Helper</span> mới tải về</h6>

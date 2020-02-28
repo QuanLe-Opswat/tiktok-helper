@@ -43,9 +43,9 @@ const getTiktokDownloadLink = async (url) => {
     } else {
       return { error_msg_server: Constant.ERROR_DownloadUrlNotFount };
     }
-  } catch (e) {
+  } catch (err) {
     // console.log(e);
-    return { error_msg_server: Constant.ERROR_InternalServerError, err: e };
+    return { error_msg_server: Constant.ERROR_InternalServerError, err: { message: err.message, stack: err.stack } };
   }
 };
 
@@ -67,13 +67,16 @@ const getTiktokCnDownloadLink = async (url) => {
 
     if (response && response.data) {
       let json = JSON.parse(`{${response.data.split('{')[1]}`);
-      return { data: { url: `https://pcsdownload.com/videos/${json.videoURL}`, image: json.imageURL } };
+      if (json.videoURL && json.imageURL) {
+        return { data: { url: `https://pcsdownload.com/videos/${json.videoURL}`, image: json.imageURL } };
+      }
+      return { error_msg_server: Constant.ERROR_GetDownloadLinkFail, response: response.data };
     } else {
       return { error_msg_server: Constant.ERROR_UrlInvalid };
     }
-  } catch (e) {
+  } catch (err) {
     // console.log(e);
-    return { error_msg_server: Constant.ERROR_InternalServerError, err: e };
+    return { error_msg_server: Constant.ERROR_InternalServerError, err: { message: err.message, stack: err.stack } };
   }
 };
 

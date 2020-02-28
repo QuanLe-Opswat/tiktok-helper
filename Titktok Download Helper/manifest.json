@@ -1,6 +1,6 @@
 {
   "name": "Titktok Download Helper",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Titktok Download Helper",
   "permissions": [
     "activeTab"
@@ -15,7 +15,7 @@
     {
       "matches": [
         "https://www.tiktok.com/*",
-        "https://*.douyin.com/*"
+        "https://*.iesdouyin.com/*"
       ],
       "run_at": "document_idle",
       "js": [
