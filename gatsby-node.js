@@ -26,4 +26,10 @@ exports.createPages = ({ actions }) => {
     component: require.resolve('./src/pages/extension/extension.js'),
     context: { page: 'extension' },
   });
+
+  createPage({
+    path: `/fb-ref-upload`,
+    component: require.resolve('./src/pages/fb-ref-upload/fbReferenceUpload.js'),
+    context: { page: 'fb-ref-upload' },
+  });
 };
