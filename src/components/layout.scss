@@ -11,6 +11,10 @@
 
   .toolbar {
     margin: 12px 0;
+
+    &.isHide {
+      display: none;
+    }
   }
 
   a {

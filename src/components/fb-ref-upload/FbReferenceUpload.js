@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
-import Papa from 'papaparse';
+import FbReferenceService from '../../service/FbReferenceService';
+import FacebookLogin from 'react-facebook-login';
 
 import './FbReferenceUpload.scss';
 
@@ -25,9 +26,18 @@ const FbReferenceUpload = () => {
     setFilesUpload(files);
   };
 
+  const onStartClick = async () => {
+    console.log(filesUpload);
+    await FbReferenceService.startUpload(fileConfig, filesUpload);
+  };
+
+  const responseFacebook = (response) => {
+    console.log(response);
+  };
+
   return <div className='fbReferenceUpload'>
     <Row>
-      <Col lg={3}>
+      <Col lg={3} className='leftPanel'>
         <Row className='configContainer'>
           <div>
             <h5>
@@ -38,9 +48,9 @@ const FbReferenceUpload = () => {
               <Button size='sm' variant='outline-primary' onClick={() => configRef.current.click()}>
                 Select Config file (*.csv)
               </Button>
-              <span className='configFileName'>
-            {fileConfig && fileConfig.name}
-          </span>
+              <p className='configFileName'>
+                {fileConfig && fileConfig.name}
+              </p>
             </div>
             <small>... download template here!!!</small>
           </div>
@@ -50,20 +60,44 @@ const FbReferenceUpload = () => {
             <h5>
               File Upload
             </h5>
-            <input style={{ display: 'none' }} type='file' ref={filesRef} multiple onChange={onFilesChange}/>
+            <input style={{ display: 'none' }} type='file' ref={filesRef} multiple onChange={onFilesChange}
+                   accept='video/*'
+            />
             <div>
               <Button size='sm' variant='outline-primary' onClick={() => filesRef.current.click()}>
                 Select Files
               </Button>
               <p className='uploadFileInfo'>
-                {`Upload files: ${filesUpload.length}`}
+                Upload files: <b>{filesUpload.length}</b>
               </p>
             </div>
           </div>
         </Row>
       </Col>
-      <Col lg={9}>
-
+      <Col lg={9} className='rightPanel'>
+        <Row>
+          <div className='controlPanel'>
+            <h5>
+              Control Panel
+            </h5>
+            <div>
+              <div className='fbBtnContainer'>
+                <FacebookLogin
+                  appId="206762630434354"
+                  fields="name,email,picture"
+                  size='small'
+                  icon="fa-facebook"
+                  callback={responseFacebook}
+                />
+              </div>
+              <Button size='sm' variant='outline-primary'
+                      onClick={onStartClick}
+                      disabled={!(fileConfig && filesUpload && filesUpload.length > 0)}>
+                Start Upload
+              </Button>
+            </div>
+          </div>
+        </Row>
       </Col>
     </Row>
 

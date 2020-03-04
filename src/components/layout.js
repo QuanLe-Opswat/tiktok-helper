@@ -10,10 +10,12 @@ import PropTypes from 'prop-types';
 import { useStaticQuery, graphql, Link } from 'gatsby';
 
 import Header from './header';
-import './layout.scss';
 import { Button, Col, Row } from 'react-bootstrap';
+import classname from 'classnames';
 
-const Layout = ({ children, page }) => {
+import './layout.scss';
+
+const Layout = ({ children, page, isHide }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -24,13 +26,15 @@ const Layout = ({ children, page }) => {
     }
   `);
 
+  const toolbarClass = classname({ 'isHide': isHide }, 'toolbar');
+
   return (
     <div className='layout'>
       <Header siteTitle={data.site.siteMetadata.title}/>
       <div className='layoutBody'>
         <Col>
           <Row>
-            <div className='toolbar'>
+            <div className={toolbarClass}>
               <Link to='/'>
                 <Button variant={page === 'video' ? 'primary' : 'outline-primary'} size="sm">
                   Video
