@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
 import FbReferenceService from '../../service/FbReferenceService';
 import FacebookLogin from 'react-facebook-login';
+import FbApi from '../../service/FbApi';
 
 import './FbReferenceUpload.scss';
 
@@ -12,6 +13,8 @@ const FbReferenceUpload = () => {
 
   const filesRef = useRef(null);
   const [filesUpload, setFilesUpload] = useState([]);
+
+  const [pageData, setPageData] = useState(undefined);
 
   const onConfigChange = (e) => {
     setFileConfig(e.target.files[0]);
@@ -27,13 +30,38 @@ const FbReferenceUpload = () => {
   };
 
   const onStartClick = async () => {
-    console.log(filesUpload);
+    // console.log(filesUpload);
     await FbReferenceService.startUpload(fileConfig, filesUpload);
   };
 
-  const responseFacebook = (response) => {
-    console.log(response);
+  let fbApi = undefined;
+  const responseFacebook = async (response) => {
+    if (response && response.name && response.email && response.accessToken) {
+      console.log(response);
+      fbApi = new FbApi(response);
+      const pageData = await fbApi.getPageInfo();
+      setPageData(pageData);
+      console.log(pageData);
+    }
   };
+
+  const fbDOM = useMemo(() =>
+      (!pageData ?
+        <FacebookLogin
+          appId="206762630434354"
+          fields="name,email,picture,permissions"
+          scope="public_profile,pages_show_list,publish_pages,manage_pages"
+          manage_pages
+          size='small'
+          icon="fa-facebook"
+          callback={responseFacebook}/> :
+        <div>
+          <img height={pageData.picture.height} width={pageData.picture.width} src={pageData.picture.data.url}
+               alt={pageData.name}/>
+          <span className='pageName'>{pageData.name}</span>
+        </div>),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pageData]);
 
   return <div className='fbReferenceUpload'>
     <Row>
@@ -82,13 +110,7 @@ const FbReferenceUpload = () => {
             </h5>
             <div>
               <div className='fbBtnContainer'>
-                <FacebookLogin
-                  appId="206762630434354"
-                  fields="name,email,picture"
-                  size='small'
-                  icon="fa-facebook"
-                  callback={responseFacebook}
-                />
+                {fbDOM}
               </div>
               <Button size='sm' variant='outline-primary'
                       onClick={onStartClick}

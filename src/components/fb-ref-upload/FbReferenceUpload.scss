@@ -3,6 +3,10 @@
 .fbReferenceUpload {
   margin-top: 20px;
 
+  //.isHide {
+  //  display: none !important;
+  //}
+
   .configContainer {
     margin-bottom: 20px;
   }
@@ -42,5 +46,12 @@
 
   .controlPanel {
     margin-left: 20px;
+  }
+
+  .pageName{
+    font-size: 16px;
+    font-weight: 600;
+    margin-left: 10px;
+    color: $coldGrey;
   }
 }
