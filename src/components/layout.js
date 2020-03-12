@@ -8,14 +8,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useStaticQuery, graphql, Link } from 'gatsby';
-
+import { Helmet } from "react-helmet"
 import Header from './header';
 import { Button, Col, Row } from 'react-bootstrap';
 import classname from 'classnames';
 
 import './layout.scss';
 
-const Layout = ({ children, page, isHide }) => {
+const Layout = ({ children, page, isHideNav, pageTitle }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -26,11 +26,17 @@ const Layout = ({ children, page, isHide }) => {
     }
   `);
 
-  const toolbarClass = classname({ 'isHide': isHide }, 'toolbar');
+  const toolbarClass = classname({ 'isHideNav': isHideNav }, 'toolbar');
+
+  const title = pageTitle ? pageTitle : data.site.siteMetadata.title;
 
   return (
     <div className='layout'>
-      <Header siteTitle={data.site.siteMetadata.title}/>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{title}</title>
+      </Helmet>
+      <Header siteTitle={title}/>
       <div className='layoutBody'>
         <Col>
           <Row>

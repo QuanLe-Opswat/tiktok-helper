@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import FileReaderService from './FileReaderService';
+// import FileReaderService from './FileReaderService';
 
 class FbReferenceService {
 
@@ -14,7 +14,7 @@ class FbReferenceService {
     // validate video files
 
     // upload
-    const fr = new FileReaderService(filesUpload[0]);
+    // const fr = new FileReaderService(filesUpload[0]);
     // fr.getChuck((result) => console.log(result));
 
     return {};

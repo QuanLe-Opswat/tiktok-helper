@@ -48,7 +48,7 @@ const FbReferenceUpload = () => {
   const fbDOM = useMemo(() =>
       (!pageData ?
         <FacebookLogin
-          appId="206762630434354"
+          appId="214048743043727"
           fields="name,email,picture,permissions"
           scope="public_profile,pages_show_list,publish_pages,manage_pages"
           manage_pages

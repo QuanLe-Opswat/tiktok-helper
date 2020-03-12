@@ -1,7 +1,7 @@
 import React from 'react';
 
 const PolicyPage = () => (
-  <div style={{ padding: '2rem'}}>
+  <div style={{ padding: '2rem' }}>
     <h2>Privacy Policy</h2>
     <p>
       Quan Le built the Yup Right Managament app as
@@ -48,7 +48,7 @@ const PolicyPage = () => (
       used by the app
     </p>
       <ul>
-        <li><a href="https://www.facebook.com/about/privacy" target="_blank">Facebook</a></li>
+        <li><a href="https://www.facebook.com/about/privacy" rel="noopener noreferrer" target="_blank">Facebook</a></li>
       </ul>
     </div>
     <p><strong>Log Data</strong></p>
